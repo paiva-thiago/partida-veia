@@ -1,0 +1,9 @@
+body {
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin: 20px;
+  background-color:rgb(85, 170, 170);
+}
+
+button{
+  font:14px "consolas";
+}
