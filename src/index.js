@@ -1,14 +1,41 @@
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Button } from '@react95/core';
-import { Modal } from '@react95/core';
-import { Fieldset } from '@react95/core';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Button } from '@react95/core'
+import { Modal } from '@react95/core'
+import { Fieldset } from '@react95/core'
 
 import './index.css';
-  
-  const mark = (x)=> x ? 'X' : 'O'
-  
+
+
+const Utils = {  
+  mark : (x)=> x ? 'X' : 'O',
+  fimDeJogo : function(squares){
+      return squares.filter((x)=>x===null).length === 0
+  },
+  verificaVencedor : function (squares) {
+      const lines = [
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+          [0, 3, 6],
+          [1, 4, 7],
+          [2, 5, 8],
+          [0, 4, 8],
+          [2, 4, 6],
+          ];
+          for (let i = 0; i < lines.length; i++) {
+          const [a, b, c] = lines[i];
+          if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+              return squares[a];
+          }
+          }
+          return null;
+  }
+}
+
+
+
   function Square(p) {
     return <Button onClick={p.onClick} value={(p.value!=null?p.value:'•')}></Button>    
   }
@@ -23,10 +50,10 @@ import './index.css';
     }
     handleClick(i){
         const sq = this.state.squares.slice()
-        if (calculateWinner(sq) || sq[i]) {
+        if (Utils.verificaVencedor(sq) || sq[i]) {
           return
         }
-        sq[i] = mark(this.state.xProximo)
+        sq[i] = Utils.mark(this.state.xProximo)
         this.setState({
             squares  : sq,
             xProximo : !this.state.xProximo
@@ -39,8 +66,8 @@ import './index.css';
     }
   
     render() {
-      const vencedor = calculateWinner(this.state.squares)
-      const acabou   = fimDeJogo(this.state.squares)
+      const vencedor = Utils.verificaVencedor(this.state.squares)
+      const acabou   = Utils.fimDeJogo(this.state.squares)
       let status
       if (vencedor){
         status = vencedor.concat(' venceu!!!')
@@ -48,7 +75,7 @@ import './index.css';
         if (acabou){
             status = 'Jogo sem vencedor :/'
         }else{
-            status = 'Próximo: '.concat(mark(this.state.xProximo))
+            status = 'Próximo: '.concat(Utils.mark(this.state.xProximo))
         }
       }
   
@@ -101,28 +128,5 @@ import './index.css';
     <Game />,
     document.getElementById('root')
   );
-  
-  function fimDeJogo(squares){
-   return squares.filter((x)=>x===null).length === 0
-  }
-      
-
-  function calculateWinner(squares) {
-    const lines = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
-      }
-    }
-    return null;
-  }
+ 
+ 
